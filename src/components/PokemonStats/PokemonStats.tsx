@@ -9,7 +9,7 @@ const PokemonStats = () => {
     <div className={styles.pokemonStats}>
       <div className={styles.typeBadge}>
         {pokemon?.types.map((item) => (
-          <PokemonTypeBadge pokemonType={item.type} />
+          <PokemonTypeBadge pokemonType={item.type} key={item.type} />
         ))}
       </div>
       <h3>Base Stats:</h3>
