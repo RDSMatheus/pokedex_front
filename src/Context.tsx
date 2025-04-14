@@ -4,6 +4,7 @@ import {
   GET_ALL_POKEMON,
   GET_POKEMON_BY_NAME_OR_ID,
 } from './features/pokemonService';
+import { useNavigate } from 'react-router-dom';
 
 interface ContextType {
   pokemon: PokemonI | null;
@@ -53,6 +54,7 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
   const [battling, setBattling] = React.useState(false);
   const [winner, setWinner] = React.useState<PokemonI | null>(null);
   const [tie, setTie] = React.useState(false);
+  const navigate = useNavigate();
 
   const getPokemonA = React.useCallback(
     async (name: string): Promise<void> => {
@@ -137,18 +139,22 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
       await getPokemonB('4');
     })();
   }, [getPokemonA, getPokemonB]);
+
   const getPokemon = React.useCallback(
     async (name: string): Promise<void> => {
       try {
+        setPokemon(null);
         if (pokemonCache[name]) {
           setPokemon(pokemonCache[name]);
           return;
         }
+
         setLoading(true);
         const { url, options } = GET_POKEMON_BY_NAME_OR_ID(name);
         const data = await fetch(url, options);
         const response = (await data.json()) as PokemonI;
         if (!data.ok) throw new Error('Pokemon não encontrado');
+        navigate(`/${response.id}`);
         setPokemonCache((prev) => ({ ...prev, [name]: response }));
         setPokemon(response);
       } catch (error) {
@@ -157,7 +163,7 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
         setLoading(false);
       }
     },
-    [pokemonCache],
+    [pokemonCache, navigate],
   );
 
   React.useEffect(() => {

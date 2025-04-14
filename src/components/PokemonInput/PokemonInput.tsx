@@ -44,6 +44,7 @@ const PokemonInput = () => {
     <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: '3' }}>
       <label className={styles.input}>
         <input
+          
           onChange={({ target }) =>
             setPokemon(target.value.trim().toLowerCase())
           }

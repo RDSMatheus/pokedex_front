@@ -6,9 +6,10 @@ import Slider from '../../../components/Slider/Slider';
 import { useData } from '../../../Context';
 import React from 'react';
 import PokemonNav from '../../../components/PokemonNav/PokemonNav';
+import Loading from '../../../components/Loading/Loading';
 
 const PokemonList = () => {
-  const { setPokemonInput } = useData();
+  const { setPokemonInput, loading } = useData();
   const { name } = useParams();
 
   React.useEffect(() => {
@@ -21,9 +22,15 @@ const PokemonList = () => {
     <section>
       <Slider />
       <div className="wrapper container">
-        <PokemonTitle />
-        <PokemonData />
-        <PokemonStats />
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <PokemonTitle />
+            <PokemonData />
+            <PokemonStats />
+          </>
+        )}
       </div>
       <PokemonNav />
     </section>
