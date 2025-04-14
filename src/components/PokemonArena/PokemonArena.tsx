@@ -4,6 +4,8 @@ import style from './PokemonArena.module.css';
 const PokemonArena = () => {
   const { pokemonA, pokemonB, battling, winner, tie } = useData();
 
+  console.log(pokemonA);
+
   return (
     <div className={`${style.pokemonArena} ${battling ? style.battling : ''}`}>
       <div

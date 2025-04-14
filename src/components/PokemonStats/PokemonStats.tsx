@@ -14,18 +14,16 @@ const PokemonStats = () => {
       </div>
       <h3>Base Stats:</h3>
       <ul>
-        {pokemon?.stats.map((item) => (
-          <>
-            <li key={item.base_stat}>
-              {item.stat
-                ? item.stat === 'special-attack' ||
-                  item.stat === 'special-defense'
-                  ? item.stat.replace('special-', 'sp. ')
-                  : item.stat
-                : ''}
-              : {item.base_stat}
-            </li>
-          </>
+        {pokemon?.stats.map((item, index) => (
+          <li key={item.stat + index}>
+            {item.stat
+              ? item.stat === 'special-attack' ||
+                item.stat === 'special-defense'
+                ? item.stat.replace('special-', 'sp. ')
+                : item.stat
+              : ''}
+            : {item.base_stat}
+          </li>
         ))}
         <li>total: {pokemon?.totalPower}</li>
       </ul>

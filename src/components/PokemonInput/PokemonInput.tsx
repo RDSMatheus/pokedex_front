@@ -2,21 +2,25 @@ import React from 'react';
 import { useData } from '../../Context';
 import styles from './PokemonInput.module.css';
 import { AllPokemon } from '../../features/pokemonTypes';
+import { useNavigate } from 'react-router-dom';
 
 const PokemonInput = () => {
   const [pokemon, setPokemon] = React.useState('');
   const { getPokemon, allPokemons } = useData();
   const [sugestion, setSugestion] = React.useState<AllPokemon[]>([]);
+  const navigate = useNavigate();
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!pokemon) {
       setPokemon('1');
       await getPokemon('1');
+      navigate('/1');
       return;
     }
     setSugestion([]);
     await getPokemon(pokemon);
+    navigate(`/${pokemon}`);
   }
 
   React.useEffect(() => {
@@ -44,7 +48,6 @@ const PokemonInput = () => {
     <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: '3' }}>
       <label className={styles.input}>
         <input
-          
           onChange={({ target }) =>
             setPokemon(target.value.trim().toLowerCase())
           }

@@ -9,14 +9,14 @@ import PokemonNav from '../../../components/PokemonNav/PokemonNav';
 import Loading from '../../../components/Loading/Loading';
 
 const PokemonList = () => {
-  const { setPokemonInput, loading } = useData();
+  const { getPokemon, loading, pokemon } = useData();
   const { name } = useParams();
 
   React.useEffect(() => {
     if (name) {
-      setPokemonInput(name);
+      getPokemon(name);
     }
-  }, [name, setPokemonInput]);
+  }, [name, getPokemon]);
 
   return (
     <section>
@@ -25,11 +25,13 @@ const PokemonList = () => {
         {loading ? (
           <Loading />
         ) : (
-          <>
-            <PokemonTitle />
-            <PokemonData />
-            <PokemonStats />
-          </>
+          pokemon && (
+            <>
+              <PokemonTitle />
+              <PokemonData />
+              <PokemonStats />
+            </>
+          )
         )}
       </div>
       <PokemonNav />

@@ -40,7 +40,7 @@ export function useData() {
 
 export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
   const [pokemon, setPokemon] = React.useState<PokemonI | null>(null);
-  const [pokemonInput, setPokemonInput] = React.useState<string>('1');
+  const [pokemonInput, setPokemonInput] = React.useState<string>('');
   const [bgColor, setBgColor] = React.useState<number[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [pokemonCache, setPokemonCache] = React.useState<
@@ -54,6 +54,7 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
   const [battling, setBattling] = React.useState(false);
   const [winner, setWinner] = React.useState<PokemonI | null>(null);
   const [tie, setTie] = React.useState(false);
+  const hasLoaded = React.useRef(false);
   const navigate = useNavigate();
 
   const getPokemonA = React.useCallback(
@@ -133,17 +134,10 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
     [pokemonCache, pokemonB],
   );
 
-  React.useEffect(() => {
-    (async () => {
-      await getPokemonA('1');
-      await getPokemonB('4');
-    })();
-  }, [getPokemonA, getPokemonB]);
-
   const getPokemon = React.useCallback(
     async (name: string): Promise<void> => {
+      setPokemon(null);
       try {
-        setPokemon(null);
         if (pokemonCache[name]) {
           setPokemon(pokemonCache[name]);
           return;
@@ -154,9 +148,9 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
         const data = await fetch(url, options);
         const response = (await data.json()) as PokemonI;
         if (!data.ok) throw new Error('Pokemon não encontrado');
-        navigate(`/${response.id}`);
-        setPokemonCache((prev) => ({ ...prev, [name]: response }));
         setPokemon(response);
+        setPokemonCache((prev) => ({ ...prev, [name]: response }));
+        navigate(`/${response.id}`);
       } catch (error) {
         console.log(error);
       } finally {
@@ -181,8 +175,11 @@ export const ContextGlobal = ({ children }: React.PropsWithChildren) => {
   }, []);
 
   React.useEffect(() => {
-    getPokemon(pokemonInput);
-  }, [pokemonInput, getPokemon]);
+    if (!pokemon && !hasLoaded.current) {
+      getPokemon('1');
+      hasLoaded.current = true;
+    }
+  }, [pokemon, getPokemon]);
 
   const prefetchPokemon = React.useCallback(
     async (id: string): Promise<void> => {
