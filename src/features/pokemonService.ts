@@ -1,4 +1,4 @@
-const pokeUrl = 'http://localhost:3000/';
+const pokeUrl = import.meta.env.VITE_API_URL;
 
 export function GET_POKEMON_BY_NAME_OR_ID(name: string) {
   return {
